@@ -17,18 +17,19 @@ player_dataframe<-function(pid){
 
 merge_abpitch <- function(database,start,end) {
   atbat <- tbl(database, 'atbat')
-  atbat<-select(atbat,c(num,gameday_link,date,pitcher_name,pitcher))
+  #atbat<-select(atbat,c(num,gameday_link,date,pitcher_name,pitcher))
   pitches <- tbl(database, 'pitch')
-  pitches<-select(pitches,c(num,gameday_link,start_speed,pitch_type))
+  #pitches<-select(pitches,c(num,gameday_link,start_speed,pitch_type))
   atbat <- filter(atbat, date >= start & date <= end)
   pitches<-filter(pitches,substr(gameday_link,5,14)>=start & substr(gameday_link,5,14)<=end)
   ABpitch<-inner_join(pitches,atbat,by=c('num','gameday_link'))
 }
-s<-'2016_09_20'
-e<-'2016_10_02'
+s<-'2008_04_01'
+e<-'2016_12_31'
 ABpitch<-merge_abpitch(db,s,e)
 abpitch<-collect(ABpitch,n=Inf)
-print("Finished collecting")
+beep(4)
+
 velo<-ddply(abpitch,.(pitcher_name,gameday_link,date,pitch_type),summarize,avg_velo=mean(start_speed,na.rm=TRUE),num_pitches=sum(start_speed,na.rm=TRUE)/avg_velo)
 velo<-velo[order(velo$pitcher_name,velo$pitch_type,velo$date),]
 View(velo)
