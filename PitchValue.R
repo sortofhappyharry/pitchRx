@@ -133,7 +133,7 @@ PV_script<-function(data,start,end){
   data = Pitch_Values(data,play_matrix)
   data
 }
-s='2016_04_01'
+s='2014_04_01'
 e='2016_10_03'
 abpitchse<-PV_script(abpitch,s,e)
 View(abpitchse)
