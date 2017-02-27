@@ -1,11 +1,11 @@
 #Pitch Value
-#Make that change!!!
-library('DBI')
-library('plyr')
-library('dplyr')
-library('ggplot2')
-library('pitchRx')
-library('RSQLite')
+#library('DBI')
+#library('plyr')
+#library('dplyr')
+#library('ggplot2')
+#library('pitchRx')
+#library('RSQLite')
+
 Add_Event_Values<-function(abpitch){
   abpitch$runner1B<-1-is.na(abpitch$on_1b)
   abpitch$runner2B<-1-is.na(abpitch$on_2b)
@@ -127,26 +127,25 @@ Batters_wOBA2<-function(data,n){
 PV_script<-function(data,start,end){
   data= subset(abpitch, date>=start & date<=end)
   data = Add_Event_Values(data)
-  #run_matrix <- Run_Matrix(data)
+  run_matrix <- Run_Matrix(data)
   data$play_value<-run_matrix[data$final_state,1]-run_matrix[data$initial_state,1]+data$total_runs-data$initial_total_score
-  #play_matrix <- Play_Matrix(data,run_matrix)
+  play_matrix <- Play_Matrix(data,run_matrix)
   data = Pitch_Values(data,play_matrix)
   data
 }
-s='2015_04_01'
-e='2015_10_03'
+s='2016_04_01'
+e='2016_10_03'
 abpitchse<-PV_script(abpitch,s,e)
 View(abpitchse)
-wOBA2_2015<-Batters_wOBA2(abpitchse,200)
-View(wOBA2_2015)
-beep(4)
+#wOBA2_2015<-Batters_wOBA2(abpitchse,200)
+#View(wOBA2_2015)
+#beep(4)
 
-wOBAs<-join(wOBAs_2015,wOBAs_2016,by="batter")
-names(wOBAs)[9]<-"vOBA"
-lin_wOBA_1516<-lm(wOBA~vOBA, data = wOBAs)
-summary(lin_wOBA_1516)
-View(wOBAs)
+#wOBAs<-join(wOBAs_2015,wOBAs_2016,by="batter")
+#names(wOBAs)[9]<-"vOBA"
+#lin_wOBA_1516<-lm(wOBA~vOBA, data = wOBAs)
+#summary(lin_wOBA_1516)
+#View(wOBAs)
 
-
-
-
+best_pitches<-Best_Pitches(abpitchse,200)
+View(best_pitches)
